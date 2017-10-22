@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>O mundo - @ViewBag.Title</title>
+    <meta charset="utf-8" />
+
+    <!-- Lembre-se que o ~ direciona aos CSSs do sistema nas Views -->
+    <link rel="stylesheet" href="~/css/site.css" />
+
+</head>
+<body>
+
+    <div id="sidebar">
+        <img src="~/img/foto.jpg" alt="headshot" class="headshot" />
+        <span id="userName">Breno Batista</span>
+        <ul class="menu">
+            @*<li class="active"><a href="/">Home</a></li>
+                <li><a href="/app/about">Sobre</a></li>
+                <li><a href="/app/contact">Contato</a></li>*@
+
+            <!-- É preciso criar um arquivo _ViewStart.cshtml e importar as configurações
+                para que as tags do asp funcionem. -->
+            <li class="active"><a asp-controller="App" asp-action="Index">Home</a></li>
+            <li><a asp-controller="App" asp-action="About">Sobre</a></li>
+            <li><a asp-controller="App" asp-action="Contact">Contato</a></li>
+
+        </ul>
+    </div>
+
+    <div id="wrapper">
+        <div id="main">
+            <div>
+                <button id="menuToggle">Oculta Menu</button>
+            </div>
+
+            @RenderBody()
+
+        </div>
+        <div id="footer">
+            &copy; 2017 - O mundo
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @RenderSection("scripts", false)
+
+    <script src="~/js/site.js"></script>
+</body>
+
+</html>
