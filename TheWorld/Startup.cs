@@ -16,6 +16,8 @@ namespace TheWorld
     public void ConfigureServices(IServiceCollection services)
     {
 
+      services.AddDbContext<WorldContext>();
+
       // é preciso adicionar o MVC nas configurações para
       // as páginas funcionarem
       services.AddMvc();
