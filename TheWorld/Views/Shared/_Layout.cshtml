@@ -6,7 +6,11 @@
     <meta charset="utf-8" />
 
     <!-- Lembre-se que o ~ direciona aos CSSs do sistema nas Views -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootswatch/darkly/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/fontawesome/css/font-awesome.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+
 
 </head>
 <body>
@@ -14,7 +18,7 @@
     <div id="sidebar">
         <img src="~/img/foto.jpg" alt="headshot" class="headshot" />
         <span id="userName">Breno Batista</span>
-        <ul class="menu">
+        <ul class="nav">
             @*<li class="active"><a href="/">Home</a></li>
                 <li><a href="/app/about">Sobre</a></li>
                 <li><a href="/app/contact">Contato</a></li>*@
@@ -29,22 +33,47 @@
     </div>
 
     <div id="wrapper">
-        <div id="main">
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar-left">
+                    <li>
+            <button id="sidebarToggle" class="btn btn-primary">
+                            <i class="fa fa-angle-left"></i>
+                        </button>
+                    </li>
+                </ul>
+                <a asp-controller="App" asp-action="Index" class="navbar-brand">O Mundo</a>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" class="btn btn-sm btn-info">
+                            <i class="fa fa-save"></i> Salvar
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="btn btn-sm btn-info">
+                            <i class="fa fa-print"></i> Imprimir
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div id="main" class="container-fluid">
             <div>
-                <button id="menuToggle">Oculta Menu</button>
+                @RenderBody()
             </div>
 
-            @RenderBody()
-
         </div>
-        <div id="footer">
-            &copy; 2017 - O mundo
+        <div id="footer" class="container-fluid">
+      <div class="navbar navbar-inverse navbar-fixed-bottom">
+        <h4 class="text-center text-info">&copy; 2017 - O mundo</h4>
+            </div>
         </div>
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    @RenderSection("scripts", false)
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 
+    @RenderSection("Scripts", false)
     <script src="~/js/site.js"></script>
 </body>
 

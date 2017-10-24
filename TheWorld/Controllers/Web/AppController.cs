@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TheWorld.Models;
 using TheWorld.ViewModels;
 
 namespace TheWorld.Controllers.Web
@@ -13,15 +14,29 @@ namespace TheWorld.Controllers.Web
   {
     //private IMailService _mailService;
     private IConfigurationRoot _config;
+    private WorldContext _context;
 
-    //public AppController(IMailService mailService, IConfigurationRoot config)
-    //{
-    //  _mailService = mailService;
-    //  _config = config;
-    //}
+    public AppController(IConfigurationRoot config, WorldContext context)
+    {
+      //_mailService = mailService;
+      _config = config;
+
+      _context = context;
+    }
+
     public IActionResult Index()
     {
-      return View();
+      try
+      {
+        var data = _context.Trips.ToList();
+
+        return View(data);
+      }
+      catch (Exception ex)
+      {
+        //_logger.LogError($"Failed to get trips in Index page: {ex.Message}");
+        return Redirect("/error");
+      }
     }
 
     public IActionResult Contact()
