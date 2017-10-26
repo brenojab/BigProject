@@ -1,0 +1,37 @@
+﻿@model IEnumerable<TheWorld.Models.Trip>
+@{
+  ViewBag.Title = "Home page";
+  Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <h1>O mundo</h1>
+        <p>Esse vai ser um website da hora em breve!</p>
+
+        <form>
+            <div class="form-group">
+                <label>Data</label>
+                <input class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Localização</label>
+                <input class="form-control" />
+            </div>
+            <div><input type="submit" value="Adicionar" class="btn btn-success" /></div>
+        </form>
+    </div>
+
+    <div class="col-md-6">
+        <h2>O mapa</h2>
+
+        <ul>
+            @foreach (var item in Model)
+            {
+            <li>@item.Name : @item.DateCreated.ToString("d")</li>
+
+            }
+        </ul>
+
+    </div>
+</div>

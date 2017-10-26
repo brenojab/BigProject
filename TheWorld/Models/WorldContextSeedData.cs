@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,14 +9,28 @@ namespace TheWorld.Models
   public class WorldContextSeedData
   {
     private WorldContext _context;
+    private UserManager<WorldUser> _userManager;
+    private string managerEmail;
 
-    public WorldContextSeedData(WorldContext context)
+    public WorldContextSeedData(WorldContext context, UserManager<WorldUser> userManager)
     {
       _context = context;
+      _userManager = userManager;
     }
 
     public async Task EnsureSeedData()
     {
+      if(await _userManager.FindByEmailAsync($"{managerEmail}") == null)
+      {
+        var user = new WorldUser()
+        {
+          UserName = "breno",
+          Email = managerEmail,
+        };
+
+        await _userManager.CreateAsync(user, "12345678"); 
+      }
+
 
       if (!_context.Trips.Any())
       {
@@ -23,7 +38,7 @@ namespace TheWorld.Models
         {
           DateCreated = DateTime.Now,
           Name = "US trip",
-          UserName = "", // TODO Add username
+          UserName = "breno", // TODO Add username
           Stops = new List<Stop>()
           {
             new Stop() { Order = 0, Latitude =  33.748995, Longitude =  -84.387982, Name = "Atlanta, Georgia", Arrival = DateTime.Parse("Jun 3, 2014") },
@@ -90,7 +105,7 @@ namespace TheWorld.Models
         {
           DateCreated = DateTime.Now,
           Name = "WorldTrip",
-          UserName = "", //TODO add username
+          UserName = "breno", //TODO add username
           Stops = new List<Stop>()
           {
             new Stop() {  Name = "Atlanta, GA", Arrival = new DateTime(2014, 6, 4), Latitude = 33.748995, Longitude = -84.387982, Order = 0 },

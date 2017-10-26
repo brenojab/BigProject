@@ -40,7 +40,7 @@ namespace TheWorld.Controllers.Api
       }
       catch (Exception ex)
       {
-        _logger.LogError($"Faild to get trips: {ex.Message}");
+        _logger.LogError($"Failed to get trips: {ex.Message}");
       }
       return BadRequest("erro");
 
@@ -69,7 +69,7 @@ namespace TheWorld.Controllers.Api
         
       //}
 
-      return BadRequest("Faild Save");
+      return BadRequest("Failed Save");
     }
 
 

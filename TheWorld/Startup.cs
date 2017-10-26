@@ -11,7 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using AutoMapper;
+using TheWorld.Services;
 using TheWorld.ViewModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace TheWorld
 {
@@ -46,12 +48,25 @@ namespace TheWorld
 
       services.AddDbContext<WorldContext>();
 
-      services.AddScoped<IWorldRepository, WorldRepository>();
+      
+
+      services.AddIdentity<WorldUser, IdentityRole>(config =>
+      {
+        config.User.RequireUniqueEmail = true;
+        config.Password.RequiredLength = 8;
+        //config.Cookies.ApplicationCookie.LoginPath = "/Auth/Login"; // TODO: deprecated
+
+      }).AddEntityFrameworkStores<WorldContext>();
+
+
+services.AddScoped<IWorldRepository, WorldRepository>();
+
+      services.AddTransient<GeoCoordsService>();
       services.AddTransient<WorldContextSeedData>();
 
+
+      services.ConfigureApplicationCookie(options => options.AccessDeniedPath = "/Auth/Login"); //TODO: Alternativa para config.Cookies.ApplicationCookie.LoginPath = "/Auth/Login";
       services.AddLogging();
-
-
 
       // é preciso adicionar o MVC nas configurações para
       // as páginas funcionarem
@@ -59,6 +74,10 @@ namespace TheWorld
         AddJsonOptions(config =>
       config.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver()
       );
+
+
+    
+
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -93,6 +112,11 @@ namespace TheWorld
       //app.UseDefaultFiles();
 
       app.UseStaticFiles();
+
+      // A ordem importa!
+      //app.UseIdentity(); // TODO: deprecated
+
+      AuthAppBuilderExtensions.UseAuthentication(app);
 
       app.UseMvc(config =>
       {

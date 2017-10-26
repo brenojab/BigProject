@@ -18,6 +18,7 @@ namespace TheWorld.Models
       _logger = logger;
     }
 
+    // Esse método salva propriamente na base de dados
     public async Task<bool> SaveChangesAsync()
     {
       return (await _context.SaveChangesAsync()) > 0;
@@ -37,10 +38,22 @@ namespace TheWorld.Models
 
     public Trip GetTripByName(string tripName)
     {
-      // Permite adicionar acrregar a coleção de Stops quando retornada.
+      // O Include permite adicionar carregar também a coleção de Stops quando retornada.
       return _context.Trips.Include(t => t.Stops).Where(n => n.Name == tripName).FirstOrDefault();
 
       //return _context.Trips.Where(n => n.Name == tripName);
+    }
+
+    public void AddStop(string tripName, Stop newStop)
+    {
+      var trip = GetTripByName(tripName);
+
+      if (trip!=null)
+      {
+        trip.Stops.Add(newStop);
+        _context.Stops.Add(newStop);
+
+      }
     }
   }
 }
