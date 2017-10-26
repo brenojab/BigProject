@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using TheWorld.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
+using AutoMapper;
+using TheWorld.ViewModels;
 
 namespace TheWorld
 {
@@ -38,22 +42,48 @@ namespace TheWorld
       //{
       //  // Implement a real Mail Service
       //}
+
+
       services.AddDbContext<WorldContext>();
+
+      services.AddScoped<IWorldRepository, WorldRepository>();
+      services.AddTransient<WorldContextSeedData>();
+
+      services.AddLogging();
+
+
+
       // é preciso adicionar o MVC nas configurações para
       // as páginas funcionarem
-      services.AddMvc();
+      services.AddMvc().
+        AddJsonOptions(config =>
+      config.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver()
+      );
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env, WorldContextSeedData seeder, ILoggerFactory factory)
     {
       //#if DEBUG
       //app.UseDeveloperExceptionPage();
       //#endif
 
+      //AutoMapper.Mapper.Configuration.CreateMapper<>
+
+      Mapper.Initialize(config =>
+      {
+        config.CreateMap<TripViewModel, Trip>().ReverseMap();
+        config.CreateMap<StopViewModel, Stop>().ReverseMap();
+      });
+
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
+        factory.AddDebug(LogLevel.Information);
+      }
+      else
+      {
+        factory.AddDebug(LogLevel.Error);
       }
 
 
@@ -72,6 +102,8 @@ namespace TheWorld
           defaults: new { controller = "App", action = "Index" }
           );
       });
+
+      seeder.EnsureSeedData().Wait();
 
       //app.Run(async (context) =>
       //{
